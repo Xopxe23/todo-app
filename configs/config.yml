@@ -1,1 +1,8 @@
 port: "8000"
+db:
+    username: "golangninja_user"
+    password: "golangninja_password"
+    host: "localhost"
+    port: "5432"
+    dbname: "golangninja_db"
+    sslmode: "disable"
