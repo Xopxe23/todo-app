@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) createList(c *gin.Context) {
-	id, err := getUserId(c)
+	user_id, err := getUserId(c)
 	if err != nil {
 		return
 	}
@@ -19,7 +19,7 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
-	id, err = h.services.TodoList.Create(id, input)
+	id, err := h.services.TodoList.Create(user_id, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -30,8 +30,24 @@ func (h *Handler) createList(c *gin.Context) {
 	})
 }
 
-func (h *Handler) getAllLists(c *gin.Context) {
+type getAllListsResponse struct{
+	Data []todo.TodoList `json:"data"`
+}
 
+func (h *Handler) getAllLists(c *gin.Context) {
+	user_id, err := getUserId(c)
+	if err != nil {
+		return
+	}
+
+	lists, err := h.services.TodoList.GetAll(user_id)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, getAllListsResponse{
+		Data: lists,
+	})
 }
 
 func (h *Handler) getListById(c *gin.Context) {
