@@ -2,13 +2,14 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Xopxe23/todo-app"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) createList(c *gin.Context) {
-	user_id, err := getUserId(c)
+	userId, err := getUserId(c)
 	if err != nil {
 		return
 	}
@@ -19,7 +20,7 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.TodoList.Create(user_id, input)
+	id, err := h.services.TodoList.Create(userId, input)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -30,17 +31,17 @@ func (h *Handler) createList(c *gin.Context) {
 	})
 }
 
-type getAllListsResponse struct{
+type getAllListsResponse struct {
 	Data []todo.TodoList `json:"data"`
 }
 
 func (h *Handler) getAllLists(c *gin.Context) {
-	user_id, err := getUserId(c)
+	userId, err := getUserId(c)
 	if err != nil {
 		return
 	}
 
-	lists, err := h.services.TodoList.GetAll(user_id)
+	lists, err := h.services.TodoList.GetAll(userId)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -51,7 +52,22 @@ func (h *Handler) getAllLists(c *gin.Context) {
 }
 
 func (h *Handler) getListById(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
 
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, "invalid id param")
+		return
+	}
+	list, err := h.services.GetById(userId, id)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, list)
 }
 
 func (h *Handler) updateList(c *gin.Context) {
