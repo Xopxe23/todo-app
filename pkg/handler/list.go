@@ -62,7 +62,7 @@ func (h *Handler) getListById(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, "invalid id param")
 		return
 	}
-	list, err := h.services.GetById(userId, id)
+	list, err := h.services.TodoItem.GetById(userId, id)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
