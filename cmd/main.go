@@ -17,14 +17,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Todo app API
+// @title Todo app API
 // @version 1.0
 // @description API Server for Todo List Application
 
 // @host localhost:8000
 // @BasePath /
 
-// @securitydefinitions.apikey ApiKeyAuth
+// @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
 
